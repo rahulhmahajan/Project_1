@@ -19,4 +19,3 @@ with open(filename, mode="w", newline="") as file:
     writer.writerows(rows)    # Write data
 
 print(f"{filename} created successfully!")
-v
