@@ -1,0 +1,6 @@
+Task 1
+set of records are in CSV import them in diffrent data base
+
+as array in numpy and pandas data set 
+
+and plot a graph of it 
