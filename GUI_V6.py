@@ -45,7 +45,10 @@ menubar = tk.Menu(root)
 file_menu = tk.Menu(menubar, tearoff=0)
 file_menu.add_command(label="Project Maps", command=open_project_maps)
 file_menu.add_separator()
-file_menu.add_command(label="Exit", command=root.quit)
+file_menu.add_command(label="Reset 🔁", command=root.quit)
+file_menu.add_separator()
+file_menu.add_command(label="Exit ❌", command=root.quit)
+
 menubar.add_cascade(label="File", menu=file_menu)
 root.config(menu=menubar)
 
@@ -55,7 +58,7 @@ sidebar.pack(side="left", fill="y")
 
 # Tool Image
 try:
-    tool_img = tk.PhotoImage(file="tool.gif")  # must be .gif
+    tool_img = tk.PhotoImage(file="tool.PNG")  # must be .gif
     tool_label = tk.Label(sidebar, image=tool_img, bg="#111827")
     tool_label.image = tool_img
     tool_label.pack(pady=10)
@@ -67,11 +70,11 @@ app_title = tk.Label(sidebar, text="Integrity Tool", bg="#111827", fg="white",
                      font=("Segoe UI", 14, "bold"), pady=10)
 app_title.pack()
 
-menu_items = ["Project Maps", "Services", "Jobs", "Events"]
+menu_items = ["Check Integrity Access", "Check Project Access", "Trace Artifacts Separator","Add Config","Choose File for trace"]
 for item in menu_items:
     btn = tk.Button(sidebar, text=item, bg="#1f2937", fg="white",
                     relief="flat", font=("Segoe UI", 11),
-                    command=lambda x=item: log_message(x + " clicked"))
+                    command=lambda x=item: log_message(x + " clicked")) #Add Function which accepts para can judge what to be done
     btn.pack(fill="x", padx=10, pady=5)
 
 # ---------- Main Content ----------
@@ -85,7 +88,7 @@ entry_project.grid(row=0, column=1, pady=5, sticky="w")
 
 # Revision Start
 tk.Label(content, text="Revision Start:", bg="#f3f4f6", font=("Segoe UI", 11)).grid(row=1, column=0, sticky="w", pady=5)
-entry_rev_start = tk.Entry(content, width=20)
+entry_rev_start = tk.Entry(content, width=40)
 entry_rev_start.grid(row=1, column=1, pady=5, sticky="w")
 
 rev_start_option = tk.StringVar(value="Development Path")
@@ -95,7 +98,7 @@ tk.Radiobutton(content, text="Revision", variable=rev_start_option, value="Revis
 
 # Revision End
 tk.Label(content, text="Revision End:", bg="#f3f4f6", font=("Segoe UI", 11)).grid(row=2, column=0, sticky="w", pady=5)
-entry_rev_end = tk.Entry(content, width=20)
+entry_rev_end = tk.Entry(content, width=40)
 entry_rev_end.grid(row=2, column=1, pady=5, sticky="w")
 
 rev_end_option = tk.StringVar(value="Development Path")
