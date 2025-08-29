@@ -1,0 +1,27 @@
+{
+    "items": [
+        "Apple",
+        "Banana",
+        "Mango",
+        "Orange",
+        "Grapes",
+        "Pineapple",
+        "Papaya"
+    ],
+    "defaults": [
+        "Apple",
+        "Mango",
+        "Pineapple"
+    ],
+    "selection": [
+        "Orange",
+        "Mango",
+        "Apple",
+        "Banana"
+    ],
+    "ignore": [
+        "Grapes",
+        "Pineapple",
+        "Papaya"
+    ]
+}
