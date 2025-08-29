@@ -17,11 +17,11 @@
         "Orange",
         "Mango",
         "Apple",
-        "Banana"
-    ],
-    "ignore": [
-        "Grapes",
+        "Banana",
         "Pineapple",
         "Papaya"
+    ],
+    "ignore": [
+        "Grapes"
     ]
 }
