@@ -1,0 +1,66 @@
+Sub ConvertAllExcelToCSV()
+    Dim inputPath As String, outputPath As String
+    Dim fso As Object, folder As Object, file As Object
+    Dim wb As Workbook, ws As Worksheet
+    Dim fileName As String, csvFile As String
+    
+    'Pick folder containing Excel files
+    With Application.FileDialog(msoFileDialogFolderPicker)
+        .Title = "Select Folder Containing Excel Files"
+        If .Show <> -1 Then Exit Sub
+        inputPath = .SelectedItems(1)
+    End With
+
+    'Pick output folder
+    With Application.FileDialog(msoFileDialogFolderPicker)
+        .Title = "Select Folder to Save CSV Files"
+        If .Show <> -1 Then Exit Sub
+        outputPath = .SelectedItems(1)
+    End With
+
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    Set folder = fso.GetFolder(inputPath)
+
+    'Loop through files
+    For Each file In folder.Files
+        If LCase(fso.GetExtensionName(file.Name)) = "xlsx" Or _
+           LCase(fso.GetExtensionName(file.Name)) = "xls" Or _
+           LCase(fso.GetExtensionName(file.Name)) = "xlsm" Then
+
+            Set wb = Workbooks.Open(file.Path)
+
+            For Each ws In wb.Worksheets
+                
+                'Skip empty sheets
+                If WorksheetHasData(ws) Then
+                    
+                    'Sanitize sheet name for file system
+                    fileName = ws.Name
+                    fileName = Replace(fileName, ":", "_")
+                    fileName = Replace(fileName, "\", "_")
+                    fileName = Replace(fileName, "/", "_")
+                    fileName = Replace(fileName, "?", "_")
+                    fileName = Replace(fileName, "*", "_")
+                    fileName = Replace(fileName, "[", "_")
+                    fileName = Replace(fileName, "]", "_")
+
+                    csvFile = outputPath & "\" & fso.GetBaseName(file.Name) & "_" & fileName & ".csv"
+
+                    ws.Copy
+                    ActiveWorkbook.SaveAs Filename:=csvFile, FileFormat:=xlCSV
+                    ActiveWorkbook.Close False
+                End If
+            Next ws
+
+            wb.Close False
+        End If
+    Next file
+
+    Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
+
+    MsgBox "🎉 All non-empty Excel sheets converted to CSV successfully!", vbInformation
+End Sub
