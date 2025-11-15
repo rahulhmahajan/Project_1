@@ -1,27 +1,24 @@
 {
-    "items": [
-        "Apple",
-        "Banana",
-        "Mango",
-        "Orange",
-        "Grapes",
-        "Pineapple",
-        "Papaya"
-    ],
-    "defaults": [
-        "Apple",
-        "Mango",
-        "Pineapple"
-    ],
-    "selection": [
-        "Orange",
-        "Mango",
-        "Apple",
-        "Banana",
-        "Pineapple",
-        "Papaya"
-    ],
-    "ignore": [
-        "Grapes"
-    ]
+    "No_of_database": 2,
+    "Repo_dir": "D:/Self_learning_Projects/Task1",
+    "sets": {
+        "DataBase1": {
+            "Barren": "D:/Self_learning_Projects/Task1\\climate.csv",
+            "orphan": "D:/Self_learning_Projects/Task1\\practice_10x50.csv",
+            "RNI": "D:/Self_learning_Projects/Task1\\practice_10x50.csv",
+            "SDD_TO_CODE": "D:/Self_learning_Projects/Task1\\practice_10x50 temp.csv",
+            "SRS_TO_CODE": "D:/Self_learning_Projects/Task1\\practice_10x50.csv",
+            "TOP_TO_BOTTOM": "database1_top_to_bottom_out.csv",
+            "BOTTOM_TO_TOP": "database1_bottom_to_top.csv"
+        },
+        "DataBase2": {
+            "Barren": "D:/Self_learning_Projects/Task1\\climate2.csv",
+            "orphan": "D:/Self_learning_Projects/Task1\\practice_10x50.csv",
+            "RNI": "",
+            "SDD_TO_CODE": "",
+            "SRS_TO_CODE": "",
+            "TOP_TO_BOTTOM": "database2_top_to_bottom_out.csv",
+            "BOTTOM_TO_TOP": "database2_bottom_to_top.csv"
+        }
+    }
 }
