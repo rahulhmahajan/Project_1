@@ -1,0 +1,33 @@
+Sub SplitSheetsToCSV()
+    Dim ws As Worksheet
+    Dim csvPath As String
+    Dim fileName As String
+    
+    'Choose folder to save CSVs
+    With Application.FileDialog(msoFileDialogFolderPicker)
+        .Title = "Select Folder to Save CSV Files"
+        If .Show <> -1 Then Exit Sub
+        csvPath = .SelectedItems(1)
+    End With
+    
+    Application.ScreenUpdating = False
+    
+    For Each ws In ThisWorkbook.Worksheets
+        ws.Copy 'Creates a new workbook with just this sheet
+        
+        'Sanitize sheet name for invalid filename characters
+        fileName = Replace(ws.Name, ":", "_")
+        fileName = Replace(fileName, "\", "_")
+        fileName = Replace(fileName, "/", "_")
+        fileName = Replace(fileName, "?", "_")
+        fileName = Replace(fileName, "*", "_")
+        fileName = Replace(fileName, "[", "_")
+        fileName = Replace(fileName, "]", "_")
+        
+        ActiveWorkbook.SaveAs Filename:=csvPath & "\" & fileName & ".csv", FileFormat:=xlCSV
+        ActiveWorkbook.Close SaveChanges:=False
+    Next ws
+    
+    Application.ScreenUpdating = True
+    MsgBox "🎉 Completed! All sheets exported as CSV.", vbInformation
+End Sub
