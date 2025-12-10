@@ -8,6 +8,7 @@ class ConfigGUI:
         self.root = root
         root.title("CSV Config Editor (Python 3.5+)")
 
+        # Initialize variables
         self.scan_path = ""
         self.csv_files = []
         self.original_json = {}
@@ -46,13 +47,15 @@ class ConfigGUI:
         self.canvas.create_window((0, 0), window=self.frame, anchor="nw")
         self.frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
 
+        # Dictionary to hold all DB blocks
         self.db_blocks = {}
 
+        # Categories for AS/OS DBs
         self.categories = ["ORPHAN", "RNI", "Barren", "SRS_TO_SDD", "SDD_TO_CODE"]
+        # Categories for Test block
+        self.test_categories = ["AS_SDD_2_CHILD", "AS_SRS_2_CHILD", "OS_SDD_2_CHILD", "OS_SRS_2_CHILD"]
 
-    # =====================================================================
-    # Select folder + scan CSVs
-    # =====================================================================
+    # ----------------- Select folder + scan CSVs -----------------
     def select_folder(self):
         folder = filedialog.askdirectory()
         if not folder:
@@ -60,21 +63,18 @@ class ConfigGUI:
 
         self.scan_path = folder
         self.scan_label.config(text="Scan Path: " + folder, fg="green")
-
         self.workaround_path = os.path.join(folder, "WorkAround")
 
         # Scan CSV files
         self.csv_files = [f for f in os.listdir(folder) if f.lower().endswith(".csv")]
 
-        # Update dropdowns
+        # Update dropdowns in all DB blocks
         for db in self.db_blocks:
             self.update_dropdowns(self.db_blocks[db])
 
-        messagebox.showinfo("Folder Loaded", "Found " + str(len(self.csv_files)) + " CSV files.")
+        messagebox.showinfo("Folder Loaded", f"Found {len(self.csv_files)} CSV files.")
 
-    # =====================================================================
-    # Create DB Blocks (AS1, AS2, … OS)
-    # =====================================================================
+    # ----------------- Generate DB blocks (AS/OS/Test) -----------------
     def generate_db_blocks(self):
         try:
             count = int(self.db_count_entry.get())
@@ -82,22 +82,24 @@ class ConfigGUI:
             messagebox.showerror("Error", "Enter valid number.")
             return
 
-        # Clear old
+        # Clear old blocks
         for widget in self.frame.winfo_children():
             widget.destroy()
 
         self.db_blocks = {}
 
-        # AS1…ASn + OS
+        # Create AS1..ASn + OS + Test
         db_list = ["AS" + str(i) for i in range(1, count + 1)]
         db_list.append("OS")
+        db_list.append("Test")  # Include Test block
 
         for db in db_list:
-            self.db_blocks[db] = self.create_db_block(db)
+            if db == "Test":
+                self.db_blocks[db] = self.create_test_block(db)
+            else:
+                self.db_blocks[db] = self.create_db_block(db)
 
-    # =====================================================================
-    # Create one DB block UI
-    # =====================================================================
+    # ----------------- Create AS/OS DB block -----------------
     def create_db_block(self, db_name):
         frame = tk.LabelFrame(self.frame, text=db_name, padx=10, pady=10)
         frame.pack(fill="x", padx=10, pady=10)
@@ -110,11 +112,9 @@ class ConfigGUI:
 
             tk.Label(row, text=cat + ": ", width=15, anchor="w").pack(side="left")
 
-            # Dropdown (only CSV filenames)
             cb = ttk.Combobox(row, values=self.csv_files, state="readonly", width=40)
             cb.pack(side="left", padx=5)
 
-            # Old path label
             old_label = tk.Label(row, text="Old: <none>", fg="blue", anchor="w")
             old_label.pack(side="left", padx=5)
 
@@ -122,16 +122,35 @@ class ConfigGUI:
 
         return dropdowns
 
-    # =====================================================================
-    # Update dropdown values once CSVs are scanned
-    # =====================================================================
+    # ----------------- Create Test block -----------------
+    def create_test_block(self, db_name):
+        frame = tk.LabelFrame(self.frame, text=db_name, padx=10, pady=10)
+        frame.pack(fill="x", padx=10, pady=10)
+
+        dropdowns = {}
+
+        for cat in self.test_categories:
+            row = tk.Frame(frame)
+            row.pack(fill="x", pady=5)
+
+            tk.Label(row, text=cat + ": ", width=25, anchor="w").pack(side="left")
+
+            cb = ttk.Combobox(row, values=self.csv_files, state="readonly", width=40)
+            cb.pack(side="left", padx=5)
+
+            old_label = tk.Label(row, text="Old: <none>", fg="blue", anchor="w")
+            old_label.pack(side="left", padx=5)
+
+            dropdowns[cat] = {"combo": cb, "old": old_label}
+
+        return dropdowns
+
+    # ----------------- Update dropdowns -----------------
     def update_dropdowns(self, dropdowns):
         for cat in dropdowns:
             dropdowns[cat]["combo"]["values"] = self.csv_files
 
-    # =====================================================================
-    # Load existing config
-    # =====================================================================
+    # ----------------- Load existing JSON config -----------------
     def load_config(self):
         file = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
         if not file:
@@ -139,7 +158,7 @@ class ConfigGUI:
 
         with open(file, "r") as f:
             self.original_json = json.load(f)
-            self.modified_json = json.loads(json.dumps(self.original_json))  # deep clone
+            self.modified_json = json.loads(json.dumps(self.original_json))
 
         # Load scan path
         if "scan_path" in self.original_json:
@@ -149,17 +168,17 @@ class ConfigGUI:
             if os.path.isdir(self.scan_path):
                 self.csv_files = [f for f in os.listdir(self.scan_path) if f.endswith(".csv")]
 
-        # Load sets
+        # Load sets data
         sets_data = self.original_json.get("sets", {})
         count = len([k for k in sets_data if k.startswith("AS")])
 
         self.db_count_entry.delete(0, tk.END)
         self.db_count_entry.insert(0, str(count))
 
-        # Regenerate UI blocks
+        # Regenerate DB blocks including Test
         self.generate_db_blocks()
 
-        # Fill dropdowns + show OLD path
+        # Populate dropdowns and old labels
         for db, mapping in sets_data.items():
             if db not in self.db_blocks:
                 continue
@@ -169,29 +188,22 @@ class ConfigGUI:
                     continue  # ignore extra keys
 
                 filename = os.path.basename(filepath)
-
-                # Set dropdown value
                 if filename in self.csv_files:
                     self.db_blocks[db][cat]["combo"].set(filename)
 
-                # Display OLD path
                 self.db_blocks[db][cat]["old"].config(text="Old: " + filepath)
 
         messagebox.showinfo("Config Loaded", "Config loaded successfully!")
 
-    # =====================================================================
-    # Save updated config
-    # =====================================================================
+    # ----------------- Save updated JSON config -----------------
     def generate_config(self):
         if not self.scan_path:
             messagebox.showerror("Error", "Please select CSV folder first.")
             return
 
-        # Update scan path
         self.modified_json["scan_path"] = self.scan_path
         self.modified_json["WorkAroundParentFolder"] = os.path.join(self.scan_path, "WorkAround")
 
-        # Update DB sets (only updated values)
         if "sets" not in self.modified_json:
             self.modified_json["sets"] = {}
 
@@ -201,13 +213,9 @@ class ConfigGUI:
 
             for cat in block:
                 val = block[cat]["combo"].get()
-
                 if val:
                     self.modified_json["sets"][db][cat] = os.path.join(self.scan_path, val)
-                else:
-                    pass  # keep original
 
-        # Save file
         save_path = filedialog.asksaveasfilename(
             defaultextension=".json",
             filetypes=[("JSON files", "*.json")],
@@ -222,10 +230,9 @@ class ConfigGUI:
 
         messagebox.showinfo("Saved", "Config updated (only changed values modified).")
 
-
-# =====================================================================
-# Start Application
-# =====================================================================
+# ----------------- Start application -----------------
 if __name__ == "__main__":
     root = tk.Tk()
     root.geometry("1050x700")
+    ConfigGUI(root)
+    root.mainloop()

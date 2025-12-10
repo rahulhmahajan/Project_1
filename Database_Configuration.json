@@ -11,9 +11,9 @@
     },
     "sets": {
         "AS1": {
-            "ORPHAN": "D:/Self_learning_Projects/pythonProject/TASK1\\practice_10x50.csv",
-            "RNI": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_RNI_Report_X1710_FML01_RNI_Report.csv",
-            "Barren": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_Barren_Report_X1710_FML01_Barren_Report.csv",
+            "ORPHAN": "D:/Self_learning_Projects/pythonProject/TASK1\\practice_10x50 - Copy.csv",
+            "RNI": "D:/Self_learning_Projects/pythonProject/TASK1\\practice_10x50 - Copy.csv",
+            "Barren": "D:/Self_learning_Projects/pythonProject/TASK1\\practice_10x50 - Copy.csv",
             "SRS_TO_SDD": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_SRS_SDD_Report_X1710_FML01_SRS_SDD_Report.csv",
             "SDD_TO_CODE": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_SDD_Code_Report_X1710_FML01_SDD_Code_Report.csv",
             "BOTTOM_TO_TOP": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SMD_Individual_Reports/ASI_Bottom_To_Top.csv",
