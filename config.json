@@ -1,24 +1,60 @@
 {
-    "No_of_database": 2,
-    "Repo_dir": "D:/Self_learning_Projects/Task1",
-    "sets": {
-        "DataBase1": {
-            "Barren": "D:/Self_learning_Projects/Task1\\climate.csv",
-            "orphan": "D:/Self_learning_Projects/Task1\\practice_10x50.csv",
-            "RNI": "D:/Self_learning_Projects/Task1\\practice_10x50.csv",
-            "SDD_TO_CODE": "D:/Self_learning_Projects/Task1\\practice_10x50 temp.csv",
-            "SRS_TO_CODE": "D:/Self_learning_Projects/Task1\\practice_10x50.csv",
-            "TOP_TO_BOTTOM": "database1_top_to_bottom_out.csv",
-            "BOTTOM_TO_TOP": "database1_bottom_to_top.csv"
-        },
-        "DataBase2": {
-            "Barren": "D:/Self_learning_Projects/Task1\\climate2.csv",
-            "orphan": "D:/Self_learning_Projects/Task1\\practice_10x50.csv",
-            "RNI": "",
-            "SDD_TO_CODE": "",
-            "SRS_TO_CODE": "",
-            "TOP_TO_BOTTOM": "database2_top_to_bottom_out.csv",
-            "BOTTOM_TO_TOP": "database2_bottom_to_top.csv"
-        }
+  "WorkAroundParentFolder": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround",
+  "Design_Database": 2,
+  "scan_path": "H:/R_tools/Scoping_HLR/Scripts/Database",
+  "HLR_List_For_Analysis": "H:/R_tools/Scoping_HLR/Scripts/Database/HLRs_To_Analysis.csv",
+  "WorkAroundSubfolders": {
+    "SMD_Individual_Reports": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SMD_Individual_Reports",
+    "SWVY_Individual_Reports": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SWVY_Individual_Reports",
+    "SMD_Reports": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SMD_Reports",
+    "SWVY_Reports": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SWVY_Reports"
+  },
+
+  "sets": {
+    "AS1": {
+      "ORPHAN": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_Orphan_Report_X1710_FML01_Orphan_Report.csv",
+      "RNI": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_RNI_Report_X1710_FML01_RNI_Report.csv",
+      "Barren": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_Barren_Report_X1710_FML01_Barren_Report.csv",
+      "SRS_TO_SDD": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_SRS_SDD_Report_X1710_FML01_SRS_SDD_Report.csv",
+      "SDD_TO_CODE": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_SDD_Code_Report_X1710_FML01_SDD_Code_Report.csv",
+      "BOTTOM_TO_TOP": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SMD_Individual_Reports/ASI_Bottom_To_Top.csv",
+      "TOP_TO_BOTTOM": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SMD_Individual_Reports/ASI_Top_To_Bottom.csv"
+    },
+
+    "OS": {
+      "ORPHAN": "H:/R_tools/Scoping_HLR/Scripts/Database/SWD/OS_16_2_Orphan_OS_16_2_Orphan.csv",
+      "RNI": "H:/R_tools/Scoping_HLR/Scripts/Database/SWD/OS_16_2_RNI_OS_16_2_RNI.csv",
+      "Barren": "H:/R_tools/Scoping_HLR/Scripts/Database/SWD/OS_16_2_Barren_OS_16_2_Barren.csv",
+      "SRS_TO_SDD": "H:/R_tools/Scoping_HLR/Scripts/Database/SWD/OS_16_2_SRS_SDD_OS_16_2_SRS_SDD.csv",
+      "SDD_TO_CODE": "H:/R_tools/Scoping_HLR/Scripts/Database/SWD/OS_16_2_LLR_to_CODE_OS_16_2_LLR_to_Code.csv",
+      "BOTTOM_TO_TOP": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SWD_Individual_Reports/OS_Bottom_To_Top.csv",
+      "TOP_TO_BOTTOM": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SWD_Individual_Reports/OS_Top_To_Bottom.csv"
+    },
+
+    "AS2": {
+      "ORPHAN": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_Manual_Traceability_Report_X1710_Manual_Orphan_Report.csv",
+      "RNI": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_Manual_RNI_Report_X1710_Manual_RNI_Report.csv",
+      "Barren": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_Manual_Barren_Report_X1710_Manual_Barren_Report.csv",
+      "SRS_TO_SDD": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_Manual_SRS_SDD_Report_X1710_Manual_SRS_SDD_Report.csv",
+      "SDD_TO_CODE": "H:/R_tools/Scoping_HLR/Scripts/Database/SMD/X1710_FML01_Manual_SDD_Code_Report_X1710_Manual_SDD_Code_Report.csv",
+      "TOP_TO_BOTTOM": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SMD_Individual_Reports/AS2_Top_To_Bottom.csv",
+      "BOTTOM_TO_TOP": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SMD_Individual_Reports/AS2_Bottom_To_Top.csv"
+    },
+
+    "Test": {
+      "AS_SDD_2_CHILD": "H:/R_tools/Scoping_HLR/Scripts/Database/SWVY/AS_16_2_0_Formal_SDD_to_Child_AS_16_2_0_Formal_SDD_to_Child.csv",
+      "AS_SRS_2_CHILD": "H:/R_tools/Scoping_HLR/Scripts/Database/SWVY/AS_16_2_0_Formal_SRS_to_Child_AS_16_2_0_Formal_SRS_to_Child.csv",
+      "OS_SDD_2_CHILD": "H:/R_tools/Scoping_HLR/Scripts/Database/SWVY/OS_16_2_0_Formal_SDD_to_Child_OS_16_2_0_Formal_SDD_to_Child.csv",
+      "OS_SRS_2_CHILD": "H:/R_tools/Scoping_HLR/Scripts/Database/SWVY/OS_16_2_0_Formal_SRS_to_Child_OS_16_2_0_Formal_SRS_to_Child.csv",
+      "AS_HLT_REPORT": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SWVY_Individual_Reports/AS_HLT_REPORT.csv",
+      "OS_HLT_REPORT": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SWVY_Individual_Reports/OS_HLT_REPORT.csv",
+      "AS_LLT_REPORT": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SWVY_Individual_Reports/AS_LLT_REPORT_NO_HLR.csv",
+      "OS_LLT_REPORT": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SWVY_Individual_Reports/OS_LLT_REPORT_NO_HLR.csv",
+      "AS_RLF_REPORT": "H:/R_tools/Scoping_HLR/Scripts/Database/WorkAround/SWVY_Individual_Reports/AS_RLF_REPORT.csv"
     }
+  },
+
+  "Merge_Reports": {
+    "TOP_TO_BOTTOM": "H:/R_tools/Scoping_HLR/Scripts/Database/Merge/Top_To_Bottom.csv"
+  }
 }

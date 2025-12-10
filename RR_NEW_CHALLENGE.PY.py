@@ -31,9 +31,8 @@ def load_existing_config():
         return
 
     try:
-        f = open(CONFIG_FILE, "r")
-        data = json.load(f)
-        f.close()
+        with open(CONFIG_FILE, "r") as f:
+            json.load(f)
         log("Existing config found but NOT preloading values.")
     except:
         log("Error reading config.json")
@@ -61,54 +60,57 @@ def scan_folder():
         return
 
     log("Found " + str(len(file_list)) + " file(s).")
-
     refresh_dropdowns()
 
 
 def refresh_dropdowns():
-    """Update all comboboxes values after scanning."""
+    """Update combobox file lists after scanning."""
     for set_id in dropdowns:
         for key in dropdowns[set_id]:
-            combo = dropdowns[set_id][key]
-            combo["values"] = file_list
+            dropdowns[set_id][key]["values"] = file_list
 
 
 def create_sets():
-    """Create dynamic dropdown rows based on number entered."""
+    """Build dynamic rows based on database names input."""
     global set_frames, dropdowns
 
+    # destroy previous UI
     for frame in set_frames:
         frame.destroy()
     set_frames = []
     dropdowns = {}
 
-    try:
-        count = int(entry_count.get())
-    except:
-        log("Enter a valid number of sets!")
+    # Get database names from user input
+    db_names_input = entry_db_names.get().strip()
+    db_names = [name.strip() for name in db_names_input.split(",") if name.strip()]
+
+    if not db_names:
+        log("Enter at least one database name!")
         return
 
-    for i in range(count):
-        set_name = "DataBase" + str(i + 1)
+    keys = ["Barren", "orphan", "RNI", "SDD_TO_CODE", "SRS_TO_CODE"]
 
-        frame = tk.LabelFrame(root, text=set_name)
-        frame.pack(padx=5, pady=3, fill="x")
+    for idx, set_name in enumerate(db_names, start=1):
+        frame = tk.LabelFrame(scrollable_frame, text=set_name)
+        frame.pack(padx=8, pady=4, fill="x")
         set_frames.append(frame)
 
         dropdowns[set_name] = {}
 
-        for key in ["Barren", "orphan", "RNI",'SDD_TO_CODE','SRS_TO_CODE']:
-            row = tk.Frame(frame)
-            row.pack(fill="x")
-            tk.Label(row, text=key, width=6, anchor="w").pack(side="left")
+        for r, key in enumerate(keys):
+            tk.Label(frame, text=key, width=15, anchor="w").grid(row=r, column=0, padx=5, pady=3, sticky="w")
 
             var = tk.StringVar()
-            combo = ttk.Combobox(row, textvariable=var, width=60)
-            combo.pack(side="left", padx=3)
+            combo = ttk.Combobox(frame, textvariable=var, width=60)
+            combo.grid(row=r, column=1, padx=5, pady=3, sticky="w")
+
             dropdowns[set_name][key] = combo
 
     refresh_dropdowns()
-    log("UI updated for " + str(count) + " sets.")
+    log("UI updated for " + str(len(db_names)) + " database set(s).")
+
+    root.update()
+    canvas.configure(scrollregion=canvas.bbox("all"))
 
 
 def save_config():
@@ -116,24 +118,24 @@ def save_config():
         log("Scan a folder first!")
         return
 
-    try:
-        count = int(entry_count.get())
-    except:
-        log("Enter valid number of sets!")
+    if not dropdowns:
+        log("No sets created! Enter database names and click Apply.")
         return
 
-    config_data = {
-        "count": count,
-        "scan_path": selected_folder,
-        "sets": {}
-    }
+    config_data = {"scan_path": selected_folder, "sets": {}}
 
     for set_name in dropdowns:
         config_data["sets"][set_name] = {}
-        for key in dropdowns[set_name]:
-            fname = dropdowns[set_name][key].get()
+
+        for key, widget in dropdowns[set_name].items():
+            fname = widget.get()
             full = os.path.join(selected_folder, fname) if fname else ""
             config_data["sets"][set_name][key] = full
+
+        # auto CSV outputs using database name
+        sanitized_name = set_name.replace(" ", "_")  # replace spaces if any
+        config_data["sets"][set_name]["TOP_TO_BOTTOM"] = f"{sanitized_name}_top_to_bottom_out.csv"
+        config_data["sets"][set_name]["BOTTOM_TO_TOP"] = f"{sanitized_name}_bottom_to_top.csv"
 
     try:
         with open(CONFIG_FILE, "w") as f:
@@ -143,31 +145,47 @@ def save_config():
         log("Error writing config: " + str(e))
 
 
-# ---------------- GUI ----------------
+# ================= GUI =================
 root = tk.Tk()
 root.title("Config Builder")
 
+# top input
 top = tk.Frame(root)
-top.pack(pady=5)
+top.pack(pady=6)
 
-tk.Label(top, text="Number of Sets:").pack(side="left")
-entry_count = tk.Entry(top, width=5)
-entry_count.pack(side="left", padx=5)
+tk.Label(top, text="Database Names (comma-separated):").pack(side="left")
+entry_db_names = tk.Entry(top, width=50)
+entry_db_names.pack(side="left", padx=5)
 
-btn_apply = tk.Button(top, text="Apply", command=create_sets)
-btn_apply.pack(side="left", padx=5)
+tk.Button(top, text="Apply", command=create_sets).pack(side="left", padx=5)
+tk.Button(root, text="Scan Folder", command=scan_folder).pack(pady=5)
+tk.Button(root, text="Save Config", command=save_config).pack(pady=5)
 
-btn_scan = tk.Button(root, text="Scan Folder", command=scan_folder)
-btn_scan.pack(pady=5)
-
-btn_save = tk.Button(root, text="Save Config", command=save_config)
-btn_save.pack(pady=5)
-
-log_box = tk.Text(root, height=10, width=80)
+# log box
+log_box = tk.Text(root, height=8, width=95)
 log_box.pack(pady=5)
 
-# Load old config AFTER log_box exists
+# scrollable region
+container = tk.Frame(root)
+container.pack(fill="both", expand=True)
+
+canvas = tk.Canvas(container)
+canvas.pack(side="left", fill="both", expand=True)
+
+scrollbar = tk.Scrollbar(container, orient="vertical", command=canvas.yview)
+scrollbar.pack(side="right", fill="y")
+
+canvas.configure(yscrollcommand=scrollbar.set)
+
+scrollable_frame = tk.Frame(canvas)
+canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+
+
+def update_scroll(event=None):
+    canvas.configure(scrollregion=canvas.bbox("all"))
+
+
+scrollable_frame.bind("<Configure>", update_scroll)
+
 load_existing_config()
-
-
 root.mainloop()
